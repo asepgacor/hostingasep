@@ -1,193 +1,85 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Asep Product</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:'Share Tech Mono',monospace;
-      color:#e0e0e0;
-      background:#000;
-      overflow-x:hidden;
-    }
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Asep Store</title>  
+  <style>  
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');  
+    body {  
+      margin: 0;  
+      padding: 30px 15px;  
+      font-family: 'Share Tech Mono', monospace;  
+      color: #e0e0e0;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      min-height: 100vh;  
+      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("https://files.catbox.moe/1v49gt.jpg") no-repeat center/cover fixed;  
+      animation: fadeIn 1.5s ease-in;  
+    }  
+    @keyframes fadeIn {  
+      from { opacity: 0; transform: translateY(10px); }  
+      to { opacity: 1; transform: translateY(0); }  
+    }  
+    h1 {  
+      color: #f0f0f0;  
+      text-align: center;  
+      font-size: 2.5em;  
+      margin-bottom: 10px;  
+      text-shadow: 0 0 6px rgba(0,0,0,0.6);  
+      animation: textFade 2s ease-in-out;  
+    }  
+    @keyframes textFade {  
+      0% { opacity: 0; transform: translateY(-10px); }  
+      50% { opacity: 0.6; transform: translateY(2px); }  
+      100% { opacity: 1; transform: translateY(0); }  
+    }  
+    .thumbnail {  
+      width: 100%;  
+      max-width: 480px;  
+      aspect-ratio: 16/9;  
+      border-radius: 12px;  
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);  
+      margin: 20px 0;  
+      object-fit: cover;  
+      animation: floatThumb 6s ease-in-out infinite;  
+    }  
+    @keyframes floatThumb {  
+      0%, 100% { transform: translateY(0); }  
+      50% { transform: translateY(-8px); }  
+    }  
 
-    /* ===== Welcome / Enter ===== */
-    #welcome{
-      position:fixed;inset:0;
-      background:url("https://files.catbox.moe/mg739g.jpg") center/cover no-repeat;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      z-index:999
-    }
-    #welcome h1{
-      font-size:3rem;color:#fff;text-align:center;margin:0 16px 20px;
-      text-shadow:0 0 10px #39ff14,0 0 20px #39ff14;animation:fadeGlow 2s infinite alternate
-    }
-    @keyframes fadeGlow{from{text-shadow:0 0 5px #39ff14}to{text-shadow:0 0 25px #39ff14,0 0 40px #39ff14}}
-    .enter-btn{
-      padding:12px 30px;font-size:20px;background:#39ff14;border:none;border-radius:10px;cursor:pointer;font-weight:bold;color:#000;
-      box-shadow:0 0 15px #39ff14,0 0 30px #39ff14;transition:transform .2s ease
-    }
-    .enter-btn:hover{transform:scale(1.1)}
+    /* === Kontrol Musik === */
+    .music-control{margin:15px 0;display:flex;justify-content:center;}
+    .music-control button{padding:8px 14px;border:none;border-radius:8px;background:#39ff14;color:#000;font-weight:bold;cursor:pointer;box-shadow:0 0 12px rgba(0,0,0,0.5);transition:0.3s;}
+    .music-control button:hover{transform:scale(1.08);}
+  </style>  
+</head>  
+<body>  
+  <h1>Asep Product</h1>  
+  <img src="https://files.catbox.moe/86a9gg.jpg" class="thumbnail" alt="Logo Asep Product"/>  
+  <div class="note">𝖠𝗅𝗅 𝖯𝗋𝗈𝖽𝗎𝖼𝗍𝗂𝗈𝗇𝗌 𝖡𝗒 𝖠𝗌𝖾𝗉 𝖭𝗈𝗍 𝖣𝖾𝗏</div>  
+  <hr/>  
 
-    /* ===== Tombol Musik melayang ===== */
-    .music-btn{
-      position:fixed;top:20px;right:20px;padding:8px 15px;background:rgba(0,0,0,.6);color:#fff;border:2px solid #39ff14;border-radius:8px;
-      cursor:pointer;font-size:14px;z-index:1000
-    }
-
-    /* ===== Konten Produk ===== */
-    body.entered{
-      padding:30px 15px;display:flex;flex-direction:column;align-items:center;min-height:100vh;
-      background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url("https://files.catbox.moe/1v49gt.jpg") no-repeat center/cover fixed;
-      animation:fadeIn 1.5s ease-in
-    }
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    h1{
-      color:#f0f0f0;text-align:center;font-size:2.5em;margin-bottom:10px;
-      text-shadow:0 0 6px rgba(0,0,0,.6);animation:textFade 2s ease-in-out
-    }
-    @keyframes textFade{0%{opacity:0;transform:translateY(-10px)}50%{opacity:.6;transform:translateY(2px)}100%{opacity:1;transform:translateY(0)}}
-    .thumbnail{
-      width:100%;max-width:480px;aspect-ratio:16/9;border-radius:12px;
-      box-shadow:0 0 20px rgba(0,0,0,0.6);margin:20px 0;object-fit:cover;
-      animation:floatThumb 6s ease-in-out infinite
-    }
-    @keyframes floatThumb{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-    /* ===== Produk Grid Rapi ===== */
-    .section {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 100%;
-      max-width: 1000px;
-      margin-bottom: 50px;
-    }
-  .product-list {
-  display: grid;
-  grid-template-columns: 1fr; /* selalu 1 kolom */
-  gap: 25px;
-  width: 100%;
-}
-    .product-card {
-      background: rgba(20,20,20,0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 15px;
-      padding: 18px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-    .product-card:hover {
-      background: rgba(40,40,40,0.9);
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 8px 22px rgba(0,0,0,0.8);
-    }
-    .product-image {
-      width: 100%;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.5);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-    .product-card:hover .product-image {
-      transform: scale(1.05);
-      box-shadow: 0 0 18px rgba(0,0,0,0.7);
-    }
-    .product-title {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #fff;
-      margin: 6px 0 4px;
-      text-shadow: 0 0 6px rgba(0,0,0,0.7);
-    }
-    .price {
-      font-size: 1em;
-      margin-bottom: 8px;
-      color: #e6e6e6;
-    }
-    .hint {
-      font-size: 0.85em;
-      color: #aaa;
-      margin-top: 3px;
-    }
-    .product-card.active .hint::after {content:" ▲"}
-    .product-card:not(.active) .hint::after {content:" ▼"}
-    .product-detail {
-      max-height: 0;
-      overflow: hidden;
-      margin-top: 8px;
-      font-size: 0.9em;
-      color: #c0c0c0;
-      white-space: pre-line;
-      line-height: 1.5;
-      transition: max-height .6s cubic-bezier(.25,1,.5,1), opacity .5s ease;
-      opacity: 0;
-    }
-    .product-card.active .product-detail {
-      max-height: 400px;
-      opacity: 1;
-    }
-
-    hr{width:80%;border:none;height:1px;background-color:rgba(255,255,255,.2);margin:30px 0}
-    .note{color:#ccc;font-size:.9em;text-align:center}
-    .contact-section{text-align:center;margin-top:40px;padding:20px;background:rgba(20,20,20,.85);border-radius:15px;box-shadow:0 0 14px rgba(0,0,0,.5)}
-    .contact-section h2{font-size:1.5rem;margin-bottom:15px;color:#fff}
-    .contact-links{display:flex;justify-content:center;gap:15px;margin-top:15px;flex-wrap:wrap}
-    .contact-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;font-weight:bold;text-decoration:none;color:#fff;transition:.3s;box-shadow:0 0 12px rgba(0,0,0,.4)}
-    .contact-btn img{width:20px;height:20px;object-fit:contain}
-    .contact-btn:hover{opacity:.85;transform:scale(1.06)}
-    .telegram{background-color:#0088cc}.whatsapp{background-color:#25D366}.dana{background-color:#0284fe}.seabank{background-color:#f37321}.qris{background-color:#d11c1c}
-    .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:10px 20px;border-radius:8px;font-size:.9em;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .4s ease;z-index:1000}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(-10px)}
-
-    /* Sembunyikan konten sebelum masuk */
-    #content{display:none}
-  </style>
-</head>
-<body>
-  <!-- Welcome -->
-  <div id="welcome">
-    <h1>✨ Welcome To Produk Asep</h1>
-    <button class="enter-btn" id="enterBtn">Masuk</button>
+  <!-- 🎵 Musik -->
+  <audio id="bgm" loop>
+    <source src="https://files.catbox.moe/7gjqys.mp3" type="audio/mpeg">
+  </audio>
+  <div class="music-control">
+    <button id="musicToggle">▶ Play Music</button>
   </div>
 
-  <!-- Musik -->
-  <button id="musicToggle" class="music-btn">⏸ Stop Music</button>
-  <audio id="bgm" loop>
-    <source src="https://files.catbox.moe/bwq333.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Konten Produk -->
-  <div id="content">
-    <h1>Asep Product</h1>
-    <img src="https://files.catbox.moe/86a9gg.jpg" class="thumbnail" alt="Logo Asep Product"/>
-    <div class="note">𝖶𝖾𝗅𝖼𝗈𝗆𝖾 𝖯𝗋𝗈𝖽𝗎𝗄 𝖠𝗌𝖾𝗉 𝖭𝗈𝗍 𝖣𝖾𝗏</div>
-    <hr/>
-
-    <!-- Produk Lengkap -->
-    <div class="section product-list">
-      <!-- contoh produk -->
-      <div class="product-card" onclick="toggleDetail(this)">
+  <!-- Produk Lengkap -->  
+  <div class="product-card" onclick="toggleDetail(this)">
         <img src="https://files.catbox.moe/xwaynf.jpg" class="product-image" alt="Nika"/>
         <div class="product-title">𝖭𝗂𝗄𝖺 𝖳𝖾𝗅𝖾𝗀𝗋𝖺𝗆</div>
         <div class="price">Rp35.000-180.000</div>
         <div class="hint">Tap untuk lihat detail</div>
         <div class="product-detail">
-𝗦𝗰𝗿𝗶𝗽𝘁 𝗡𝗶𝗸𝗮: 35.000
-𝗥𝗲𝘀𝘀𝗲𝗹𝗹𝗲𝗿: 60.000
-𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 180.000
+𝖲𝖼𝗋𝗂𝗉𝗍 𝖭𝗂𝗄𝖺: 35.000
+𝖱𝖾𝗌𝖾𝗅𝗅𝖾𝗋: 60.000
+𝖯𝖺𝗍𝗇𝖾𝗋𝗍: 180.000
         </div>
       </div>
 
@@ -197,16 +89,16 @@
         <div class="price">Rp35.000-180.000</div>  
         <div class="hint">Tap untuk lihat detail</div>  
         <div class="product-detail">
-𝗦𝗰𝗿𝗶𝗽𝘁 𝗦𝗮𝘀𝘂𝗸𝗲: 35.000
-𝗥𝗲𝘀𝗲𝗹𝗹𝗲𝗿: 50.000
-𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 120.000
-𝗢𝘄𝗻𝗲𝗿 𝗦𝗽𝗲𝘀𝗶𝗮𝗹: 180.000
+𝖲𝖼𝗋𝗂𝗉𝗍 𝖲𝖺𝗌𝗎𝗄𝖾: 35.000
+𝖱𝖾𝗌𝖾𝗅𝗅𝖾𝗋: 50.000
+𝖯𝖺𝗍𝗇𝖾𝗋𝗍: 120.000
+𝖮𝗐𝗇𝖾𝗋: 180.000
         </div>
       </div>
 
       <div class="product-card" onclick="toggleDetail(this)">  
         <img src="https://files.catbox.moe/mg739g.jpg" class="product-image" alt="Patnert Biasa"/>  
-        <div class="product-title">𝗔𝗹𝘄𝗮𝘆𝘀 𝗣𝗿𝗶𝗺𝗲 [𝗧𝗲𝗹𝗲]</div>  
+        <div class="product-title">Patnert Biasa</div>  
         <div class="price">Rp100.000</div>  
         <div class="hint">Tap untuk lihat detail</div>  
         <div class="product-detail">
@@ -225,8 +117,8 @@ Dll
       </div>
 
       <div class="product-card" onclick="toggleDetail(this)">  
-        <img src="https://files.catbox.moe/7z7asl.jpg" class="product-image" alt="Patnert Pribadi"/>  
-        <div class="product-title">Murid Bug Premium</div>  
+        <img src="https://files.catbox.moe/hgeqfw.jpg" class="product-image" alt="Patnert Pribadi"/>  
+        <div class="product-title">Patnert Pribadi</div>  
         <div class="price">Rp320.000</div>  
         <div class="hint">Tap untuk lihat detail</div>  
         <div class="product-detail">
@@ -256,9 +148,6 @@ Dll
         <a href="javascript:void(0)" onclick="copyToClipboard('083862861689')" class="contact-btn dana">
           <img src="https://img.icons8.com/ios-filled/50/ffffff/wallet-app.png"/> DANA
         </a>
-        <a href="javascript:void(0)" onclick="copyToClipboard('901078456255')" class="contact-btn seabank">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/bank.png"/> Sea Bank
-        </a>
       </div>
 
       <h2 style="margin-top:30px;">Contacts Asep</h2>
@@ -280,22 +169,11 @@ Dll
    <script>
     const bgm=document.getElementById("bgm");
     const musicToggle=document.getElementById("musicToggle");
-    const welcome=document.getElementById("welcome");
-    const content=document.getElementById("content");
-    const enterBtn=document.getElementById("enterBtn");
-
-    enterBtn.addEventListener("click",async()=>{
-      try{await bgm.play();}catch(e){console.warn('Autoplay ditolak:',e);}
-      document.body.classList.add("entered");
-      welcome.style.display="none";
-      content.style.display="block";
-      musicToggle.textContent=bgm.paused?"▶ Play Music":"⏸ Stop Music";
-    });
 
     musicToggle.addEventListener("click",async()=>{
       if(bgm.paused){
         try{await bgm.play();musicToggle.textContent="⏸ Stop Music";}
-        catch(e){alert("Browser blokir autoplay. Coba klik lagi ya.");}
+        catch(e){alert("Browser blokir autoplay. Klik lagi ya.");}
       }else{
         bgm.pause();musicToggle.textContent="▶ Play Music";
       }
