@@ -1,869 +1,330 @@
-<!DOCTYPE html><html lang="id">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AsepNotDev Sell</title>
-  <meta name="description" content="Toko HTML satu file. Buka di Chrome, langsung jualan!" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🛍️</text></svg>">
-  <style>
-    :root{
-      --bg:#0b0e13; --card:#111723; --muted:#8ea1c0; --text:#eaf1ff; --brand:#6ee7ff; --brand2:#a78bfa; --ring:0 0 0 3px rgba(110,231,255,.35);
-      --shadow:0 20px 40px rgba(0,0,0,.35);
-    }
-    [data-theme="light"]{
-      --bg:#f7f9ff; --card:#ffffff; --muted:#55627a; --text:#0b1220; --ring:0 0 0 3px rgba(79,70,229,.25);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%;background:radial-gradient(1200px 800px at 10% -10%,rgba(167,139,250,.12),transparent),radial-gradient(1000px 600px at 110% 10%,rgba(110,231,255,.1),transparent),var(--bg);color:var(--text);font:500 15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-    a{color:inherit}
-    .container{max-width:1200px;margin:auto;padding:20px}/* Header */
-header{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.55);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-[data-theme="light"] header{background:rgba(255,255,255,.75);border-color:rgba(15,23,42,.08)}
-.nav{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:10px 20px}
-.brand{display:flex;gap:10px;align-items:center}
-.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;box-shadow:0 10px 30px rgba(167,139,250,.25)}
-.brand h1{margin:0;font-size:18px;letter-spacing:.3px}
-
-.search{flex:1;max-width:540px;display:flex;gap:10px;align-items:center;margin:0 16px}
-.input,.select{width:100%;background:var(--card);border:1px solid rgba(255,255,255,.10);color:var(--text);padding:10px 12px;border-radius:12px;outline:none;transition:.2s}
-.input:focus,.select:focus{box-shadow:var(--ring);border-color:transparent}
-
-.btn{cursor:pointer;user-select:none;border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b0e13;font-weight:800;letter-spacing:.2px}
-.ghost{background:var(--card);color:var(--text);border:1px solid rgba(255,255,255,.10)}
-.link{background:transparent;border:1px dashed rgba(255,255,255,.25);color:var(--text)}
-
-/* Hero carousel */
-.hero{margin:22px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
-.panel{border:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,rgba(110,231,255,.08),rgba(167,139,250,.10));border-radius:18px;overflow:hidden}
-[data-theme="light"] .panel{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(14,165,233,.08));}
-.slides{position:relative;height:320px}
-.slide{position:absolute;inset:0;background:#0f141d center/cover no-repeat;opacity:0;transform:scale(1.04);transition:.6s ease}
-.slide.active{opacity:1;transform:scale(1)}
-.dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px}
-.dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.6);opacity:.6}
-.dot.active{opacity:1;background:#fff}
-.hero-info{padding:18px}
-.hero-info h2{margin:.2em 0 .3em;font-size:28px}
-.hero-info p{margin:.2em 0;color:var(--muted)}
-
-/* Product grid */
-.toolbar{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 14px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
-.card .img{aspect-ratio:4/3;background:#0f141d center/cover no-repeat;cursor:zoom-in}
-.card h3{font-size:16px;margin:10px 12px 6px}
-.card p{margin:0 12px 10px;color:var(--muted);font-size:13px}
-.price{display:flex;align-items:center;justify-content:space-between;margin:0 12px 12px}
-.price .current{font-weight:900}
-.price .strike{text-decoration:line-through;opacity:.6;font-size:13px}
-.card .actions{gap:10px;display:flex;padding:12px}
-.qty{display:flex;align-items:center;gap:10px;background:#0f141d;border:1px solid rgba(255,255,255,.08);padding:6px 8px;border-radius:12px}
-[data-theme="light"] .qty{background:#f3f5fb;border-color:rgba(15,23,42,.10)}
-.qty button{background:transparent;border:0;color:var(--text);font-size:18px;cursor:pointer}
-
-/* Drawer */
-.drawer{position:fixed;right:0;top:0;height:100dvh;width:392px;max-width:96vw;background:var(--card);border-left:1px solid rgba(255,255,255,.10);transform:translateX(100%);transition:.25s ease;z-index:60;display:flex;flex-direction:column}
-.drawer.open{transform:translateX(0)}
-.drawer header{position:sticky;top:0;background:var(--card);border-bottom:1px solid rgba(255,255,255,.10)}
-.drawer .content{padding:16px;overflow:auto;flex:1}
-.drawer .item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;border-bottom:1px dashed rgba(255,255,255,.10);padding:10px 0}
-.drawer .thumb{width:72px;height:72px;border-radius:12px;background:#0f141d center/cover no-repeat}
-.drawer .title{font-weight:800}
-.drawer .muted{color:var(--muted);font-size:13px}
-.drawer .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-
-.empty{border:1px dashed rgba(255,255,255,.18);padding:20px;border-radius:14px;text-align:center;color:var(--muted)}
-
-/* Toast */
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--card);border:1px solid rgba(255,255,255,.10);padding:10px 14px;border-radius:12px;opacity:0;transition:.25s ease;z-index:70}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* Image Modal (zoom) */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;place-items:center;z-index:80}
-.modal.open{display:grid}
-.modal img{max-width:92vw;max-height:86vh;border-radius:16px;box-shadow:var(--shadow)}
-.modal .controls{position:fixed;inset:0;display:flex;align-items:center;justify-content:space-between;padding:20px}
-.ctrl{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:10px 14px;border-radius:12px;cursor:pointer}
-
-/* Footer */
-footer{opacity:.8;text-align:center;margin:36px 0 22px;color:var(--muted)}
-
-/* Responsive */
-@media (max-width: 1100px){.grid{grid-template-columns:repeat(3,1fr)} .hero{grid-template-columns:1fr}}
-@media (max-width: 760px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width: 520px){.grid{grid-template-columns:1fr} .brand h1{font-size:16px}}
-
-  </style>
-</head>
-<body>
-  <header>
-    <div class="nav container">
-      <div class="brand">
-        <div class="logo">🛒</div>
-        <h1>AsepNotDev Sell</h1>
-      </div>
-      <div class="search">
-        <input id="search" class="input" type="search" placeholder="Cari produk… (sepatu, headset)" />
-        <select id="category" class="select" aria-label="Kategori">
-          <option value="Semua">Semua</option>
-          <option>Fashion</option>
-          <option>Elektronik</option>
-          <option>Makanan</option>
-          <option>Aksesoris</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="themeBtn" class="btn ghost" title="Tema">🌗</button>
-        <button class="btn ghost" id="btnCart" title="Buka Keranjang">Keranjang (0)</button>
-        <button class="btn" id="btnAddSample" title="Tambahkan contoh produk">+ Produk Demo</button>
-      </div>
-    </div>
-  </header>  <main class="container">
-    <!-- HERO CAROUSEL + INFO -->
-    <section class="hero">
-      <div class="panel">
-        <div class="slides" id="slides"></div>
-      </div>
-      <div class="panel hero-info">
-        <h2>AsepNotDev Sell 🚀</h2>
-        <p>Toko satu file: upload sekali, langsung jualan. Foto bisa kamu ganti sendiri; checkout langsung ke WhatsApp admin.</p>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <button class="btn" onclick="checkout()">Checkout via WhatsApp</button>
-          <button class="btn ghost" onclick="downloadOrders()">Export Pesanan (.json)</button>
-          <button class="btn link" onclick="promptSeller()">Atur Nomor WA Admin</button>
-        </div>
-      </div>
-    </section><section>
-  <div class="toolbar">
-    <h3 style="margin:0">Produk</h3>
-    <small style="color:var(--muted)"><span id="count">0</span> item</small>
-  </div>
-  <div id="grid" class="grid"></div>
-</section>
-
-  </main>  <!-- CART DRAWER -->  <aside class="drawer" id="drawer">
-    <header style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-      <strong>Keranjang</strong>
-      <button class="btn ghost" onclick="toggleDrawer(false)">Tutup</button>
-    </header>
-    <div class="content" id="cartList"></div>
-    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.10)">
-      <div class="row"><span>Subtotal</span><strong id="subtotal">Rp 0</strong></div>
-      <div class="row"><span>Ongkir (estimasi)</span><span id="shipping">Rp 0</span></div>
-      <div class="row"><span>Total</span><strong id="grand">Rp 0</strong></div>
-      <div class="row" style="margin-top:14px;gap:10px">
-        <input id="buyer" class="select" placeholder="Nama & No. HP Anda" />
-      </div>
-      <div class="row" style="margin-top:10px;gap:10px">
-        <input id="address" class="select" placeholder="Alamat lengkap (untuk pengiriman)" />
-      </div>
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn" style="flex:1" onclick="checkout()">Checkout via WhatsApp</button>
-        <button class="btn ghost" style="flex:1" onclick="clearCart()">Bersihkan</button>
-      </div>
-    </div>
-  </aside>  <!-- IMAGE ZOOM MODAL -->  <div class="modal" id="modal" onclick="closeModal(event)">
-    <img id="modalImg" alt="Preview" />
-    <div class="controls">
-      <button class="ctrl" onclick="prevImg(event)">⟨</button>
-      <button class="ctrl" onclick="nextImg(event)">⟩</button>
-    </div>
-  </div>  <div class="toast" id="toast">Ditambahkan ke keranjang</div>  <footer>
-    <small>© <span id="year"></span> — AsepNotDev Sell. Edit <code>PRODUCTS</code> untuk ubah foto, nama, harga, dan deskripsi.</small>
-  </footer><script>
-// ====== HERO SLIDES (ganti sesuai kebutuhan) ======
-const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1520975922284-8b456906c813?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1512644573531-359e422d0a5b?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1600&auto=format&fit=crop',
-];
-
-// ====== DATA PRODUK (sekarang mendukung banyak foto per produk) ======
-const PRODUCTS = [
-  {
-    id:'p1',
-    name:'Script Bug Nika Tele',
-    price:50000, compareAt:75000, category:'Digital',
-    desc:'Script bug Nika untuk Telegram. Kirim cepat setelah pembayaran.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Script+Bug+Nika+Tele',
-      'https://via.placeholder.com/1200x800?text=Preview+1'
-    ]
-  },
-  {
-    id:'p2',
-    name:'Script Bug Sasuke Tele',
-    price:60000, compareAt:85000, category:'Digital',
-    desc:'Script bug Sasuke untuk Telegram. Cocok untuk kebutuhan test/edu.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Script+Bug+Sasuke+Tele',
-      'https://via.placeholder.com/1200x800?text=Preview+2'
-    ]
-  },
-  {
-    id:'p3',
-    name:'Patnert Function',
-    price:100000, compareAt:120000, category:'Layanan',
-    desc:'Paket partner (function) dengan fitur tambahan & dukungan dasar.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Function'
-    ]
-  },
-  {
-    id:'p4',
-    name:'Patnert Biasa',
-    price:80000, compareAt:100000, category:'Layanan',
-    desc:'Paket partner standar. Hemat untuk mulai kerja sama.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Biasa'
-    ]
-  },
-  {
-    id:'p5',
-    name:'Patnert Pribadi',
-    price:150000, compareAt:175000, category:'Layanan',
-    desc:'Paket partner pribadi dengan prioritas support.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Pribadi'
-    ]
-  },
-];
-
-// ====== STATE ======
-const state = {
-  products: [...PRODUCTS],
-  cart: JSON.parse(localStorage.getItem('cart')||'{}'), // {id: qty}
-  phone: localStorage.getItem('wa') || '6283848818972', // nomor WA admin
-  theme: localStorage.getItem('theme') || 'dark',
-  modal: { pid:null, index:0 },
-};
-
-// ====== HELPERS ======
-const rp = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0);
-const el = sel => document.querySelector(sel);
-const els = sel => [...document.querySelectorAll(sel)];
-
-function toast(msg='Berhasil', ms=1400){
-  const t = el('#toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(()=> t.classList.remove('show'), ms);
-}
-function saveCart(){ localStorage.setItem('cart', JSON.stringify(state.cart)); }
-
-// ====== THEME ======
-function applyTheme(){
-  if(state.theme==='light'){ document.documentElement.setAttribute('data-theme','light'); }
-  else{ document.documentElement.removeAttribute('data-theme'); }
-}
-function toggleTheme(){
-  state.theme = state.theme==='light'?'dark':'light';
-  localStorage.setItem('theme', state.theme);
-  applyTheme();
-}
-
-// ====== HERO ======
-let heroIndex=0; let heroTimer;
-function renderHero(){
-  const wrap = el('#slides');
-  wrap.innerHTML = HERO_IMAGES.map((src,i)=>`<div class="slide ${i===0?'active':''}" style="background-image:url('${src}')"></div>`).join('') +
-    `<div class="dots">${HERO_IMAGES.map((_,i)=>`<div class="dot ${i===0?'active':''}"></div>`).join('')}</div>`;
-  startHero();
-}
-function startHero(){
-  clearInterval(heroTimer);
-  heroTimer = setInterval(()=> nextSlide(), 4000);
-}
-function nextSlide(){
-  const slides = els('.slide'); const dots=els('.dot');
-  slides[heroIndex].classList.remove('active'); dots[heroIndex].classList.remove('active');
-  heroIndex = (heroIndex+1)%slides.length;
-  slides[heroIndex].classList.add('active'); dots[heroIndex].classList.add('active');
-}
-
-// ====== PRODUCTS ======
-function renderProducts(){
-  const q = el('#search').value.trim().toLowerCase();
-  const cat = el('#category').value;
-  const data = state.products.filter(p =>
-    (cat==='Semua' || p.category===cat) &&
-    (q==='' || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))
-  );
-  el('#count').textContent = data.length;
-  const html = data.map(p=>{
-    const cover = p.images?.[0] || '';
-    return `<article class="card" data-id="${p.id}">
-      <div class="img" style="background-image:url('${cover}')" onclick="openModal('${p.id}',0)" title="Klik untuk zoom"></div>
-      <h3>${p.name}</h3>
-      <p>${p.desc}</p>
-      <div class="price">
-        <span class="current">${rp(p.price)}</span>
-        <span class="strike">${p.compareAt?rp(p.compareAt):''}</span>
-      </div>
-      <div class="actions">
-        <div class="qty" aria-label="atur jumlah">
-          <button onclick="decQty('${p.id}')">−</button>
-          <span id="qty-${p.id}">${state.cart[p.id]||0}</span>
-          <button onclick="incQty('${p.id}')">+</button>
-        </div>
-        <button class="btn" style="flex:1" onclick="addToCart('${p.id}')">Tambah</button>
-      </div>
-    </article>`;
-  }).join('');
-  el('#grid').innerHTML = html || `<div class="empty">Produk tidak ditemukan. Coba kata kunci lain.</div>`;
-}
-
-function incQty(id){ const q=(state.cart[id]||0)+1; state.cart[id]=q; el('#qty-'+id).textContent=q; updateCart(); saveCart(); }
-function decQty(id){ const q=Math.max((state.cart[id]||0)-1,0); if(q===0) delete state.cart[id]; else state.cart[id]=q; el('#qty-'+id).textContent=q; updateCart(); saveCart(); }
-function addToCart(id){ incQty(id); toast('Ditambahkan ke keranjang'); }
-
-// ====== CART ======
-function cartItems(){
-  return Object.entries(state.cart).map(([id,qty])=>{
-    const p = state.products.find(x=>x.id===id);
-    return {...p, qty, line: p.price*qty};
-  });
-}
-function updateCart(){
-  el('#btnCart').textContent = `Keranjang (${Object.values(state.cart).reduce((a,b)=>a+b,0)})`;
-  const items = cartItems();
-  const subtotal = items.reduce((s,i)=>s+i.line,0);
-  const shipping = subtotal>0 ? 15000 : 0;
-  const grand = subtotal + shipping;
-  el('#subtotal').textContent = rp(subtotal);
-  el('#shipping').textContent = rp(shipping);
-  el('#grand').textContent = rp(grand);
-
-  el('#cartList').innerHTML = items.length? items.map(i=>`
-    <div class="item">
-      <div class="thumb" style="background-image:url('${i.images?.[0]||''}')"></div>
-      <div>
-        <div class="title">${i.name}</div>
-        <div class="muted">${rp(i.price)} × ${i.qty}</div>
-        <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-          <button class="btn ghost" onclick="decQty('${i.id}')">−</button>
-          <span>${i.qty}</span>
-          <button class="btn" onclick="incQty('${i.id}')">+</button>
-        </div>
-      </div>
-      <div><strong>${rp(i.line)}</strong><br><button class="btn ghost" style="margin-top:8px" onclick="removeItem('${i.id}')">Hapus</button></div>
-    </div>
-  `).join('') : `<div class="empty">Keranjang masih kosong. Tambahkan produk dulu ya ✨</div>`;
-}
-
-function removeItem(id){ delete state.cart[id]; renderProducts(); updateCart(); saveCart(); }
-function clearCart(){ state.cart={}; renderProducts(); updateCart(); saveCart(); }
-
-// ====== DRAWER ======
-function toggleDrawer(open){ el('#drawer').classList[open?'add':'remove']('open'); }
-
-// ====== CHECKOUT VIA WHATSAPP ======
-function promptSeller(){
-  const v = prompt('Masukkan nomor WhatsApp admin (contoh: 6281234567890):', state.phone||'');
-  if(typeof v==='string'){
-    state.phone = v.trim(); localStorage.setItem('wa', state.phone);
-    toast('Nomor admin disimpan');
-  }
-}
-function checkout(){
-  const items = cartItems();
-  if(!items.length){ toast('Keranjang kosong'); toggleDrawer(true); return; }
-  if(!state.phone){ promptSeller(); if(!state.phone) return; }
-  const buyer = el('#buyer').value.trim() || '-';
-  const address = el('#address').value.trim() || '-';
-  const lines = items.map(i=>`• ${i.name} x${i.qty} = ${rp(i.line)}`).join('%0A');
-  const total = el('#grand').textContent;
-  const msg = `Halo Admin,%0ASaya ingin order:%0A${lines}%0A———%0ATotal: ${total}%0A%0ANama/HP: ${encodeURIComponent(buyer)}%0AAlamat: ${encodeURIComponent(address)}%0A%0ADikirim via? (JNE/JNT/SiCepat)`;
-  const url = `https://wa.me/${state.phone}?text=${msg}`;
-  window.open(url,'_blank');
-}
-
-// ====== EXPORT ORDER ======
-function downloadOrders(){
-  const data = { time: new Date().toISOString(), items: cartItems() };
-  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pesanan.json'; a.click(); URL.revokeObjectURL(a.href);
-}
-
-// ====== MODAL (IMAGE ZOOM) ======
-function openModal(pid, index=0){
-  state.modal = { pid, index };
-  const p = state.products.find(x=>x.id===pid); if(!p) return;
-  el('#modalImg').src = p.images[index];
-  el('#modal').classList.add('open');
-}
-function closeModal(e){ if(e.target.id==='modal') el('#modal').classList.remove('open'); }
-function nextImg(e){ e.stopPropagation(); const p = state.products.find(x=>x.id===state.modal.pid); if(!p) return; state.modal.index = (state.modal.index+1)%p.images.length; el('#modalImg').src = p.images[state.modal.index]; }
-function prevImg(e){ e.stopPropagation(); const p = state.products.find(x=>x.id===state.modal.pid); if(!p) return; state.modal.index = (state.modal.index-1+p.images.length)%p.images.length; el('#modalImg').src = p.images[state.modal.index]; }
-
-// ====== INIT ======
-function addSampleProduct(){
-  const id = 'px'+Math.random().toString(36).slice(2,7);
-  state.products.unshift({
-    id,
-    name:'Produk Custom '+id.toUpperCase(),
-    price: Math.floor(Math.random()*9+1)*10000,
-    compareAt: null,
-    category:'Aksesoris',
-    desc:'Contoh produk yang bisa kamu edit.',
-    images:[
-      'https://files.catbox.moe/z4jyuq.jpg',
-      'https://files.catbox.moe/z4jyuq.jpg'
-    ]
-  });
-  renderProducts(); toast('Produk demo ditambahkan');
-}
-
-function init(){
-  applyTheme();
-  el('#year').textContent = new Date().getFullYear();
-  renderHero();
-  renderProducts();
-  updateCart();
-  el('#btnCart').addEventListener('click',()=> toggleDrawer(true));
-  el('#btnAddSample').addEventListener('click',()=> addSampleProduct());
-  el('#search').addEventListener('input', renderProducts);
-  el('#category').addEventListener('change', renderProducts);
-  el('#themeBtn').addEventListener('click', toggleTheme);
-  // ESC untuk tutup drawer & modal
-  window.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){ el('#drawer').classList.remove('open'); el('#modal').classList.remove('open'); }
-  });
-}
-
-init();
-</script></body>
-</html>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AsepNotDev Sell</title>
-  <meta name="description" content="Toko HTML satu file. Buka di Chrome, langsung jualan!" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🛍️</text></svg>">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asep Product</title>
   <style>
-    :root{
-      --bg:#0b0e13; --card:#111723; --muted:#8ea1c0; --text:#eaf1ff; --brand:#6ee7ff; --brand2:#a78bfa; --ring:0 0 0 3px rgba(110,231,255,.35);
-      --shadow:0 20px 40px rgba(0,0,0,.35);
-    }
-    [data-theme="light"]{
-      --bg:#f7f9ff; --card:#ffffff; --muted:#55627a; --text:#0b1220; --ring:0 0 0 3px rgba(79,70,229,.25);
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%;background:radial-gradient(1200px 800px at 10% -10%,rgba(167,139,250,.12),transparent),radial-gradient(1000px 600px at 110% 10%,rgba(110,231,255,.1),transparent),var(--bg);color:var(--text);font:500 15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-    a{color:inherit}
-    .container{max-width:1200px;margin:auto;padding:20px}/* Header */
-header{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.55);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-[data-theme="light"] header{background:rgba(255,255,255,.75);border-color:rgba(15,23,42,.08)}
-.nav{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:10px 20px}
-.brand{display:flex;gap:10px;align-items:center}
-.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;box-shadow:0 10px 30px rgba(167,139,250,.25)}
-.brand h1{margin:0;font-size:18px;letter-spacing:.3px}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Share Tech Mono',monospace;
+      color:#e0e0e0;
+      background:#000;
+      overflow-x:hidden;
+    }
 
-.search{flex:1;max-width:540px;display:flex;gap:10px;align-items:center;margin:0 16px}
-.input,.select{width:100%;background:var(--card);border:1px solid rgba(255,255,255,.10);color:var(--text);padding:10px 12px;border-radius:12px;outline:none;transition:.2s}
-.input:focus,.select:focus{box-shadow:var(--ring);border-color:transparent}
+    /* ===== Welcome / Enter ===== */
+    #welcome{
+      position:fixed;inset:0;
+      background:url("https://files.catbox.moe/mg739g.jpg") center/cover no-repeat;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      z-index:999
+    }
+    #welcome h1{
+      font-size:3rem;color:#fff;text-align:center;margin:0 16px 20px;
+      text-shadow:0 0 10px #39ff14,0 0 20px #39ff14;animation:fadeGlow 2s infinite alternate
+    }
+    @keyframes fadeGlow{from{text-shadow:0 0 5px #39ff14}to{text-shadow:0 0 25px #39ff14,0 0 40px #39ff14}}
+    .enter-btn{
+      padding:12px 30px;font-size:20px;background:#39ff14;border:none;border-radius:10px;cursor:pointer;font-weight:bold;color:#000;
+      box-shadow:0 0 15px #39ff14,0 0 30px #39ff14;transition:transform .2s ease
+    }
+    .enter-btn:hover{transform:scale(1.1)}
 
-.btn{cursor:pointer;user-select:none;border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b0e13;font-weight:800;letter-spacing:.2px}
-.ghost{background:var(--card);color:var(--text);border:1px solid rgba(255,255,255,.10)}
-.link{background:transparent;border:1px dashed rgba(255,255,255,.25);color:var(--text)}
+    /* ===== Tombol Musik melayang ===== */
+    .music-btn{
+      position:fixed;top:20px;right:20px;padding:8px 15px;background:rgba(0,0,0,.6);color:#fff;border:2px solid #39ff14;border-radius:8px;
+      cursor:pointer;font-size:14px;z-index:1000
+    }
 
-/* Hero carousel */
-.hero{margin:22px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
-.panel{border:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,rgba(110,231,255,.08),rgba(167,139,250,.10));border-radius:18px;overflow:hidden}
-[data-theme="light"] .panel{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(14,165,233,.08));}
-.slides{position:relative;height:320px}
-.slide{position:absolute;inset:0;background:#0f141d center/cover no-repeat;opacity:0;transform:scale(1.04);transition:.6s ease}
-.slide.active{opacity:1;transform:scale(1)}
-.dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px}
-.dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.6);opacity:.6}
-.dot.active{opacity:1;background:#fff}
-.hero-info{padding:18px}
-.hero-info h2{margin:.2em 0 .3em;font-size:28px}
-.hero-info p{margin:.2em 0;color:var(--muted)}
+    /* ===== Konten Produk ===== */
+    body.entered{
+      padding:30px 15px;display:flex;flex-direction:column;align-items:center;min-height:100vh;
+      background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url("https://files.catbox.moe/1v49gt.jpg") no-repeat center/cover fixed;
+      animation:fadeIn 1.5s ease-in
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    h1{
+      color:#f0f0f0;text-align:center;font-size:2.5em;margin-bottom:10px;
+      text-shadow:0 0 6px rgba(0,0,0,.6);animation:textFade 2s ease-in-out
+    }
+    @keyframes textFade{0%{opacity:0;transform:translateY(-10px)}50%{opacity:.6;transform:translateY(2px)}100%{opacity:1;transform:translateY(0)}}
+    .thumbnail{
+      width:100%;max-width:480px;aspect-ratio:16/9;border-radius:12px;
+      box-shadow:0 0 20px rgba(0,0,0,0.6);margin:20px 0;object-fit:cover;
+      animation:floatThumb 6s ease-in-out infinite
+    }
+    @keyframes floatThumb{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-/* Product grid */
-.toolbar{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 14px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
-.card .img{aspect-ratio:4/3;background:#0f141d center/cover no-repeat;cursor:zoom-in}
-.card h3{font-size:16px;margin:10px 12px 6px}
-.card p{margin:0 12px 10px;color:var(--muted);font-size:13px}
-.price{display:flex;align-items:center;justify-content:space-between;margin:0 12px 12px}
-.price .current{font-weight:900}
-.price .strike{text-decoration:line-through;opacity:.6;font-size:13px}
-.card .actions{gap:10px;display:flex;padding:12px}
-.qty{display:flex;align-items:center;gap:10px;background:#0f141d;border:1px solid rgba(255,255,255,.08);padding:6px 8px;border-radius:12px}
-[data-theme="light"] .qty{background:#f3f5fb;border-color:rgba(15,23,42,.10)}
-.qty button{background:transparent;border:0;color:var(--text);font-size:18px;cursor:pointer}
+    /* ===== Produk Grid Rapi ===== */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 50px;
+    }
+  .product-list {
+  display: grid;
+  grid-template-columns: 1fr; /* selalu 1 kolom */
+  gap: 25px;
+  width: 100%;
+}
+    .product-card {
+      background: rgba(20,20,20,0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .product-card:hover {
+      background: rgba(40,40,40,0.9);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.8);
+    }
+    .product-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .product-card:hover .product-image {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(0,0,0,0.7);
+    }
+    .product-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #fff;
+      margin: 6px 0 4px;
+      text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    }
+    .price {
+      font-size: 1em;
+      margin-bottom: 8px;
+      color: #e6e6e6;
+    }
+    .hint {
+      font-size: 0.85em;
+      color: #aaa;
+      margin-top: 3px;
+    }
+    .product-card.active .hint::after {content:" ▲"}
+    .product-card:not(.active) .hint::after {content:" ▼"}
+    .product-detail {
+      max-height: 0;
+      overflow: hidden;
+      margin-top: 8px;
+      font-size: 0.9em;
+      color: #c0c0c0;
+      white-space: pre-line;
+      line-height: 1.5;
+      transition: max-height .6s cubic-bezier(.25,1,.5,1), opacity .5s ease;
+      opacity: 0;
+    }
+    .product-card.active .product-detail {
+      max-height: 400px;
+      opacity: 1;
+    }
 
-/* Drawer */
-.drawer{position:fixed;right:0;top:0;height:100dvh;width:392px;max-width:96vw;background:var(--card);border-left:1px solid rgba(255,255,255,.10);transform:translateX(100%);transition:.25s ease;z-index:60;display:flex;flex-direction:column}
-.drawer.open{transform:translateX(0)}
-.drawer header{position:sticky;top:0;background:var(--card);border-bottom:1px solid rgba(255,255,255,.10)}
-.drawer .content{padding:16px;overflow:auto;flex:1}
-.drawer .item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;border-bottom:1px dashed rgba(255,255,255,.10);padding:10px 0}
-.drawer .thumb{width:72px;height:72px;border-radius:12px;background:#0f141d center/cover no-repeat}
-.drawer .title{font-weight:800}
-.drawer .muted{color:var(--muted);font-size:13px}
-.drawer .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+    hr{width:80%;border:none;height:1px;background-color:rgba(255,255,255,.2);margin:30px 0}
+    .note{color:#ccc;font-size:.9em;text-align:center}
+    .contact-section{text-align:center;margin-top:40px;padding:20px;background:rgba(20,20,20,.85);border-radius:15px;box-shadow:0 0 14px rgba(0,0,0,.5)}
+    .contact-section h2{font-size:1.5rem;margin-bottom:15px;color:#fff}
+    .contact-links{display:flex;justify-content:center;gap:15px;margin-top:15px;flex-wrap:wrap}
+    .contact-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;font-weight:bold;text-decoration:none;color:#fff;transition:.3s;box-shadow:0 0 12px rgba(0,0,0,.4)}
+    .contact-btn img{width:20px;height:20px;object-fit:contain}
+    .contact-btn:hover{opacity:.85;transform:scale(1.06)}
+    .telegram{background-color:#0088cc}.whatsapp{background-color:#25D366}.dana{background-color:#0284fe}.seabank{background-color:#f37321}.qris{background-color:#d11c1c}
+    .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:10px 20px;border-radius:8px;font-size:.9em;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .4s ease;z-index:1000}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-10px)}
 
-.empty{border:1px dashed rgba(255,255,255,.18);padding:20px;border-radius:14px;text-align:center;color:var(--muted)}
-
-/* Toast */
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--card);border:1px solid rgba(255,255,255,.10);padding:10px 14px;border-radius:12px;opacity:0;transition:.25s ease;z-index:70}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* Image Modal (zoom) */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;place-items:center;z-index:80}
-.modal.open{display:grid}
-.modal img{max-width:92vw;max-height:86vh;border-radius:16px;box-shadow:var(--shadow)}
-.modal .controls{position:fixed;inset:0;display:flex;align-items:center;justify-content:space-between;padding:20px}
-.ctrl{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:10px 14px;border-radius:12px;cursor:pointer}
-
-/* Footer */
-footer{opacity:.8;text-align:center;margin:36px 0 22px;color:var(--muted)}
-
-/* Responsive */
-@media (max-width: 1100px){.grid{grid-template-columns:repeat(3,1fr)} .hero{grid-template-columns:1fr}}
-@media (max-width: 760px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width: 520px){.grid{grid-template-columns:1fr} .brand h1{font-size:16px}}
-
+    /* Sembunyikan konten sebelum masuk */
+    #content{display:none}
   </style>
 </head>
 <body>
-  <header>
-    <div class="nav container">
-      <div class="brand">
-        <div class="logo">🛒</div>
-        <h1>AsepNotDev Sell</h1>
-      </div>
-      <div class="search">
-        <input id="search" class="input" type="search" placeholder="Cari produk… (sepatu, headset)" />
-        <select id="category" class="select" aria-label="Kategori">
-          <option value="Semua">Semua</option>
-          <option>Fashion</option>
-          <option>Elektronik</option>
-          <option>Makanan</option>
-          <option>Aksesoris</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="themeBtn" class="btn ghost" title="Tema">🌗</button>
-        <button class="btn ghost" id="btnCart" title="Buka Keranjang">Keranjang (0)</button>
-        <button class="btn" id="btnAddSample" title="Tambahkan contoh produk">+ Produk Demo</button>
-      </div>
-    </div>
-  </header>  <main class="container">
-    <!-- HERO CAROUSEL + INFO -->
-    <section class="hero">
-      <div class="panel">
-        <div class="slides" id="slides"></div>
-      </div>
-      <div class="panel hero-info">
-        <h2>AsepNotDev Sell 🚀</h2>
-        <p>Toko satu file: upload sekali, langsung jualan. Foto bisa kamu ganti sendiri; checkout langsung ke WhatsApp admin.</p>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <button class="btn" onclick="checkout()">Checkout via WhatsApp</button>
-          <button class="btn ghost" onclick="downloadOrders()">Export Pesanan (.json)</button>
-          <button class="btn link" onclick="promptSeller()">Atur Nomor WA Admin</button>
-        </div>
-      </div>
-    </section><section>
-  <div class="toolbar">
-    <h3 style="margin:0">Produk</h3>
-    <small style="color:var(--muted)"><span id="count">0</span> item</small>
+  <!-- Welcome -->
+  <div id="welcome">
+    <h1>✨ Welcome To Produk Asep</h1>
+    <button class="enter-btn" id="enterBtn">Masuk</button>
   </div>
-  <div id="grid" class="grid"></div>
-</section>
 
-  </main>  <!-- CART DRAWER -->  <aside class="drawer" id="drawer">
-    <header style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-      <strong>Keranjang</strong>
-      <button class="btn ghost" onclick="toggleDrawer(false)">Tutup</button>
-    </header>
-    <div class="content" id="cartList"></div>
-    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.10)">
-      <div class="row"><span>Subtotal</span><strong id="subtotal">Rp 0</strong></div>
-      <div class="row"><span>Ongkir (estimasi)</span><span id="shipping">Rp 0</span></div>
-      <div class="row"><span>Total</span><strong id="grand">Rp 0</strong></div>
-      <div class="row" style="margin-top:14px;gap:10px">
-        <input id="buyer" class="select" placeholder="Nama & No. HP Anda" />
-      </div>
-      <div class="row" style="margin-top:10px;gap:10px">
-        <input id="address" class="select" placeholder="Alamat lengkap (untuk pengiriman)" />
-      </div>
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn" style="flex:1" onclick="checkout()">Checkout via WhatsApp</button>
-        <button class="btn ghost" style="flex:1" onclick="clearCart()">Bersihkan</button>
-      </div>
-    </div>
-  </aside>  <!-- IMAGE ZOOM MODAL -->  <div class="modal" id="modal" onclick="closeModal(event)">
-    <img id="modalImg" alt="Preview" />
-    <div class="controls">
-      <button class="ctrl" onclick="prevImg(event)">⟨</button>
-      <button class="ctrl" onclick="nextImg(event)">⟩</button>
-    </div>
-  </div>  <div class="toast" id="toast">Ditambahkan ke keranjang</div>  <footer>
-    <small>© <span id="year"></span> — AsepNotDev Sell. Edit <code>PRODUCTS</code> untuk ubah foto, nama, harga, dan deskripsi.</small>
-  </footer><script>
-// ====== HERO SLIDES (ganti sesuai kebutuhan) ======
-const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1520975922284-8b456906c813?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1512644573531-359e422d0a5b?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1600&auto=format&fit=crop',
-];
+  <!-- Musik -->
+  <button id="musicToggle" class="music-btn">⏸ Stop Music</button>
+  <audio id="bgm" loop>
+    <source src="https://files.catbox.moe/bwq333.mp3" type="audio/mpeg">
+  </audio>
 
-// ====== DATA PRODUK (sekarang mendukung banyak foto per produk) ======
-const PRODUCTS = [
-  {
-    id:'p1',
-    name:'Script Bug Nika Tele',
-    price:50000, compareAt:75000, category:'Digital',
-    desc:'Script bug Nika untuk Telegram. Kirim cepat setelah pembayaran.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Script+Bug+Nika+Tele',
-      'https://via.placeholder.com/1200x800?text=Preview+1'
-    ]
-  },
-  {
-    id:'p2',
-    name:'Script Bug Sasuke Tele',
-    price:60000, compareAt:85000, category:'Digital',
-    desc:'Script bug Sasuke untuk Telegram. Cocok untuk kebutuhan test/edu.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Script+Bug+Sasuke+Tele',
-      'https://via.placeholder.com/1200x800?text=Preview+2'
-    ]
-  },
-  {
-    id:'p3',
-    name:'Patnert Function',
-    price:100000, compareAt:120000, category:'Layanan',
-    desc:'Paket partner (function) dengan fitur tambahan & dukungan dasar.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Function'
-    ]
-  },
-  {
-    id:'p4',
-    name:'Patnert Biasa',
-    price:80000, compareAt:100000, category:'Layanan',
-    desc:'Paket partner standar. Hemat untuk mulai kerja sama.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Biasa'
-    ]
-  },
-  {
-    id:'p5',
-    name:'Patnert Pribadi',
-    price:150000, compareAt:175000, category:'Layanan',
-    desc:'Paket partner pribadi dengan prioritas support.',
-    images:[
-      'https://via.placeholder.com/1200x800?text=Patnert+Pribadi'
-    ]
-  },
-];
+  <!-- Konten Produk -->
+  <div id="content">
+    <h1>Asep Product</h1>
+    <img src="https://files.catbox.moe/86a9gg.jpg" class="thumbnail" alt="Logo Asep Product"/>
+    <div class="note">𝖶𝖾𝗅𝖼𝗈𝗆𝖾 𝖯𝗋𝗈𝖽𝗎𝗄 𝖠𝗌𝖾𝗉 𝖭𝗈𝗍 𝖣𝖾𝗏</div>
+    <hr/>
 
-// ====== STATE ======
-const state = {
-  products: [...PRODUCTS],
-  cart: JSON.parse(localStorage.getItem('cart')||'{}'), // {id: qty}
-  phone: localStorage.getItem('wa') || '6283848818972', // nomor WA admin
-  theme: localStorage.getItem('theme') || 'dark',
-  modal: { pid:null, index:0 },
-};
-
-// ====== HELPERS ======
-const rp = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0);
-const el = sel => document.querySelector(sel);
-const els = sel => [...document.querySelectorAll(sel)];
-
-function toast(msg='Berhasil', ms=1400){
-  const t = el('#toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(()=> t.classList.remove('show'), ms);
-}
-function saveCart(){ localStorage.setItem('cart', JSON.stringify(state.cart)); }
-
-// ====== THEME ======
-function applyTheme(){
-  if(state.theme==='light'){ document.documentElement.setAttribute('data-theme','light'); }
-  else{ document.documentElement.removeAttribute('data-theme'); }
-}
-function toggleTheme(){
-  state.theme = state.theme==='light'?'dark':'light';
-  localStorage.setItem('theme', state.theme);
-  applyTheme();
-}
-
-// ====== HERO ======
-let heroIndex=0; let heroTimer;
-function renderHero(){
-  const wrap = el('#slides');
-  wrap.innerHTML = HERO_IMAGES.map((src,i)=>`<div class="slide ${i===0?'active':''}" style="background-image:url('${src}')"></div>`).join('') +
-    `<div class="dots">${HERO_IMAGES.map((_,i)=>`<div class="dot ${i===0?'active':''}"></div>`).join('')}</div>`;
-  startHero();
-}
-function startHero(){
-  clearInterval(heroTimer);
-  heroTimer = setInterval(()=> nextSlide(), 4000);
-}
-function nextSlide(){
-  const slides = els('.slide'); const dots=els('.dot');
-  slides[heroIndex].classList.remove('active'); dots[heroIndex].classList.remove('active');
-  heroIndex = (heroIndex+1)%slides.length;
-  slides[heroIndex].classList.add('active'); dots[heroIndex].classList.add('active');
-}
-
-// ====== PRODUCTS ======
-function renderProducts(){
-  const q = el('#search').value.trim().toLowerCase();
-  const cat = el('#category').value;
-  const data = state.products.filter(p =>
-    (cat==='Semua' || p.category===cat) &&
-    (q==='' || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))
-  );
-  el('#count').textContent = data.length;
-  const html = data.map(p=>{
-    const cover = p.images?.[0] || '';
-    return `<article class="card" data-id="${p.id}">
-      <div class="img" style="background-image:url('${cover}')" onclick="openModal('${p.id}',0)" title="Klik untuk zoom"></div>
-      <h3>${p.name}</h3>
-      <p>${p.desc}</p>
-      <div class="price">
-        <span class="current">${rp(p.price)}</span>
-        <span class="strike">${p.compareAt?rp(p.compareAt):''}</span>
-      </div>
-      <div class="actions">
-        <div class="qty" aria-label="atur jumlah">
-          <button onclick="decQty('${p.id}')">−</button>
-          <span id="qty-${p.id}">${state.cart[p.id]||0}</span>
-          <button onclick="incQty('${p.id}')">+</button>
-        </div>
-        <button class="btn" style="flex:1" onclick="addToCart('${p.id}')">Tambah</button>
-      </div>
-    </article>`;
-  }).join('');
-  el('#grid').innerHTML = html || `<div class="empty">Produk tidak ditemukan. Coba kata kunci lain.</div>`;
-}
-
-function incQty(id){ const q=(state.cart[id]||0)+1; state.cart[id]=q; el('#qty-'+id).textContent=q; updateCart(); saveCart(); }
-function decQty(id){ const q=Math.max((state.cart[id]||0)-1,0); if(q===0) delete state.cart[id]; else state.cart[id]=q; el('#qty-'+id).textContent=q; updateCart(); saveCart(); }
-function addToCart(id){ incQty(id); toast('Ditambahkan ke keranjang'); }
-
-// ====== CART ======
-function cartItems(){
-  return Object.entries(state.cart).map(([id,qty])=>{
-    const p = state.products.find(x=>x.id===id);
-    return {...p, qty, line: p.price*qty};
-  });
-}
-function updateCart(){
-  el('#btnCart').textContent = `Keranjang (${Object.values(state.cart).reduce((a,b)=>a+b,0)})`;
-  const items = cartItems();
-  const subtotal = items.reduce((s,i)=>s+i.line,0);
-  const shipping = subtotal>0 ? 15000 : 0;
-  const grand = subtotal + shipping;
-  el('#subtotal').textContent = rp(subtotal);
-  el('#shipping').textContent = rp(shipping);
-  el('#grand').textContent = rp(grand);
-
-  el('#cartList').innerHTML = items.length? items.map(i=>`
-    <div class="item">
-      <div class="thumb" style="background-image:url('${i.images?.[0]||''}')"></div>
-      <div>
-        <div class="title">${i.name}</div>
-        <div class="muted">${rp(i.price)} × ${i.qty}</div>
-        <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-          <button class="btn ghost" onclick="decQty('${i.id}')">−</button>
-          <span>${i.qty}</span>
-          <button class="btn" onclick="incQty('${i.id}')">+</button>
+    <!-- Produk Lengkap -->
+    <div class="section product-list">
+      <!-- contoh produk -->
+      <div class="product-card" onclick="toggleDetail(this)">
+        <img src="https://files.catbox.moe/xwaynf.jpg" class="product-image" alt="Nika"/>
+        <div class="product-title">𝖭𝗂𝗄𝖺 𝖳𝖾𝗅𝖾𝗀𝗋𝖺𝗆</div>
+        <div class="price">Rp35.000-180.000</div>
+        <div class="hint">Tap untuk lihat detail</div>
+        <div class="product-detail">
+𝗦𝗰𝗿𝗶𝗽𝘁 𝗡𝗶𝗸𝗮: 35.000
+𝗥𝗲𝘀𝘀𝗲𝗹𝗹𝗲𝗿: 60.000
+𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 180.000
         </div>
       </div>
-      <div><strong>${rp(i.line)}</strong><br><button class="btn ghost" style="margin-top:8px" onclick="removeItem('${i.id}')">Hapus</button></div>
-    </div>
-  `).join('') : `<div class="empty">Keranjang masih kosong. Tambahkan produk dulu ya ✨</div>`;
-}
 
-function removeItem(id){ delete state.cart[id]; renderProducts(); updateCart(); saveCart(); }
-function clearCart(){ state.cart={}; renderProducts(); updateCart(); saveCart(); }
+      <div class="product-card" onclick="toggleDetail(this)">  
+        <img src="https://files.catbox.moe/y2grm8.jpeg" class="product-image" alt="Sasuke Crash"/>  
+        <div class="product-title">𝖲𝖺𝗌𝗎𝗄𝖾 𝖳𝖾𝗅𝖾</div>  
+        <div class="price">Rp35.000-180.000</div>  
+        <div class="hint">Tap untuk lihat detail</div>  
+        <div class="product-detail">
+𝗦𝗰𝗿𝗶𝗽𝘁 𝗦𝗮𝘀𝘂𝗸𝗲: 35.000
+𝗥𝗲𝘀𝗲𝗹𝗹𝗲𝗿: 50.000
+𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 120.000
+𝗢𝘄𝗻𝗲𝗿 𝗦𝗽𝗲𝘀𝗶𝗮𝗹: 180.000
+        </div>
+      </div>
 
-// ====== DRAWER ======
-function toggleDrawer(open){ el('#drawer').classList[open?'add':'remove']('open'); }
+      <div class="product-card" onclick="toggleDetail(this)">  
+        <img src="https://files.catbox.moe/mg739g.jpg" class="product-image" alt="Patnert Biasa"/>  
+        <div class="product-title">𝗔𝗹𝘄𝗮𝘆𝘀 𝗣𝗿𝗶𝗺𝗲 [𝗧𝗲𝗹𝗲]</div>  
+        <div class="price">Rp100.000</div>  
+        <div class="hint">Tap untuk lihat detail</div>  
+        <div class="product-detail">
+Get Reseller Sasuke Via Tele
+Get Patnert Domain Via Wa
+Get Reseller Domain Via Wa
+Get Sc No Enc Domain Full Upadte
+Free Admin Chanel
+Free Base Wa Atau Tele
+Get Function Bug
+Get Mursc
+Get Admin Ubot
+Di Promosiin 24x1
+Dll
+        </div>
+      </div>
 
-// ====== CHECKOUT VIA WHATSAPP ======
-function promptSeller(){
-  const v = prompt('Masukkan nomor WhatsApp admin (contoh: 6281234567890):', state.phone||'');
-  if(typeof v==='string'){
-    state.phone = v.trim(); localStorage.setItem('wa', state.phone);
-    toast('Nomor admin disimpan');
-  }
-}
-function checkout(){
-  const items = cartItems();
-  if(!items.length){ toast('Keranjang kosong'); toggleDrawer(true); return; }
-  if(!state.phone){ promptSeller(); if(!state.phone) return; }
-  const buyer = el('#buyer').value.trim() || '-';
-  const address = el('#address').value.trim() || '-';
-  const lines = items.map(i=>`• ${i.name} x${i.qty} = ${rp(i.line)}`).join('%0A');
-  const total = el('#grand').textContent;
-  const msg = `Halo Admin,%0ASaya ingin order:%0A${lines}%0A———%0ATotal: ${total}%0A%0ANama/HP: ${encodeURIComponent(buyer)}%0AAlamat: ${encodeURIComponent(address)}%0A%0ADikirim via? (JNE/JNT/SiCepat)`;
-  const url = `https://wa.me/${state.phone}?text=${msg}`;
-  window.open(url,'_blank');
-}
+      <div class="product-card" onclick="toggleDetail(this)">  
+        <img src="https://files.catbox.moe/7z7asl.jpg" class="product-image" alt="Patnert Pribadi"/>  
+        <div class="product-title">Murid Bug Premium</div>  
+        <div class="price">Rp320.000</div>  
+        <div class="hint">Tap untuk lihat detail</div>  
+        <div class="product-detail">
+Get Owner Sasuke Via Tele
+Get Owner Nika Via Tele
+Get Owner Domain Via Wa
+Ajarin Buat Script
+Free Admin Chanel
+Free Base Wa Atau Tele
+Get Function Bug
+Get Mursc
+Get Admin Ubot
+Get Baned Wangcap
+Get Admin Gb
+Di Promosiin 24x2
+Dll
+        </div>
+      </div>
 
-// ====== EXPORT ORDER ======
-function downloadOrders(){
-  const data = { time: new Date().toISOString(), items: cartItems() };
-  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pesanan.json'; a.click(); URL.revokeObjectURL(a.href);
-}
+    <!-- Payment & Contact -->
+    <footer class="contact-section">
+      <h2>All Payment</h2>
+      <div class="contact-links">
+        <a href="https://files.catbox.moe/qwe27o.jpg" target="_blank" class="contact-btn qris">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/qr-code.png"/> QRIS
+        </a>
+        <a href="javascript:void(0)" onclick="copyToClipboard('083862861689')" class="contact-btn dana">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/wallet-app.png"/> DANA
+        </a>
+        <a href="javascript:void(0)" onclick="copyToClipboard('901078456255')" class="contact-btn seabank">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/bank.png"/> Sea Bank
+        </a>
+      </div>
 
-// ====== MODAL (IMAGE ZOOM) ======
-function openModal(pid, index=0){
-  state.modal = { pid, index };
-  const p = state.products.find(x=>x.id===pid); if(!p) return;
-  el('#modalImg').src = p.images[index];
-  el('#modal').classList.add('open');
-}
-function closeModal(e){ if(e.target.id==='modal') el('#modal').classList.remove('open'); }
-function nextImg(e){ e.stopPropagation(); const p = state.products.find(x=>x.id===state.modal.pid); if(!p) return; state.modal.index = (state.modal.index+1)%p.images.length; el('#modalImg').src = p.images[state.modal.index]; }
-function prevImg(e){ e.stopPropagation(); const p = state.products.find(x=>x.id===state.modal.pid); if(!p) return; state.modal.index = (state.modal.index-1+p.images.length)%p.images.length; el('#modalImg').src = p.images[state.modal.index]; }
+      <h2 style="margin-top:30px;">Contacts Asep</h2>
+      <div class="contact-links">
+        <a href="https://t.me/asepnotdev" target="_blank" class="contact-btn telegram">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/telegram-app.png"/> Telegram
+        </a>
+        <a href="https://wa.me/6283848818972" target="_blank" class="contact-btn whatsapp">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png"/> WhatsApp
+        </a>
+      </div>
 
-// ====== INIT ======
-function addSampleProduct(){
-  const id = 'px'+Math.random().toString(36).slice(2,7);
-  state.products.unshift({
-    id,
-    name:'Produk Custom '+id.toUpperCase(),
-    price: Math.floor(Math.random()*9+1)*10000,
-    compareAt: null,
-    category:'Aksesoris',
-    desc:'Contoh produk yang bisa kamu edit.',
-    images:[
-      'https://files.catbox.moe/z4jyuq.jpg',
-      'https://files.catbox.moe/z4jyuq.jpg'
-    ]
-  });
-  renderProducts(); toast('Produk demo ditambahkan');
-}
+      <p class="note" style="margin-top:12px;">Created By Asep And Thanks To Nadds</p>
+    </footer>
 
-function init(){
-  applyTheme();
-  el('#year').textContent = new Date().getFullYear();
-  renderHero();
-  renderProducts();
-  updateCart();
-  el('#btnCart').addEventListener('click',()=> toggleDrawer(true));
-  el('#btnAddSample').addEventListener('click',()=> addSampleProduct());
-  el('#search').addEventListener('input', renderProducts);
-  el('#category').addEventListener('change', renderProducts);
-  el('#themeBtn').addEventListener('click', toggleTheme);
-  // ESC untuk tutup drawer & modal
-  window.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){ el('#drawer').classList.remove('open'); el('#modal').classList.remove('open'); }
-  });
-}
+    <div id="toast" class="toast">Tersalin!</div>
+  </div>
 
-init();
-</script></body>
+   <script>
+    const bgm=document.getElementById("bgm");
+    const musicToggle=document.getElementById("musicToggle");
+    const welcome=document.getElementById("welcome");
+    const content=document.getElementById("content");
+    const enterBtn=document.getElementById("enterBtn");
+
+    enterBtn.addEventListener("click",async()=>{
+      try{await bgm.play();}catch(e){console.warn('Autoplay ditolak:',e);}
+      document.body.classList.add("entered");
+      welcome.style.display="none";
+      content.style.display="block";
+      musicToggle.textContent=bgm.paused?"▶ Play Music":"⏸ Stop Music";
+    });
+
+    musicToggle.addEventListener("click",async()=>{
+      if(bgm.paused){
+        try{await bgm.play();musicToggle.textContent="⏸ Stop Music";}
+        catch(e){alert("Browser blokir autoplay. Coba klik lagi ya.");}
+      }else{
+        bgm.pause();musicToggle.textContent="▶ Play Music";
+      }
+    });
+
+    function toggleDetail(card){ card.classList.toggle("active"); }
+
+    function copyToClipboard(text){
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(()=>{showToast("Nomor "+text+" berhasil disalin!");})
+        .catch(()=>{fallbackCopy(text);});
+      } else { fallbackCopy(text); }
+    }
+
+    function fallbackCopy(text){
+      const textarea=document.createElement("textarea");
+      textarea.value=text;textarea.style.position="fixed";textarea.style.left="-9999px";
+      document.body.appendChild(textarea);textarea.focus();textarea.select();
+      try{document.execCommand("copy");showToast("Nomor "+text+" berhasil disalin!");}
+      catch(err){alert("Gagal menyalin");}
+      document.body.removeChild(textarea);
+    }
+
+    function showToast(message){
+      const toast=document.getElementById("toast");
+      toast.textContent=message;
+      toast.classList.add("show");
+      setTimeout(()=>{toast.classList.remove("show");},2000);
+    }
+  </script>
+</body>
 </html>
