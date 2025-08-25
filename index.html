@@ -15,7 +15,7 @@
       flex-direction: column;  
       align-items: center;  
       min-height: 100vh;  
-      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("https://files.catbox.moe/1v49gt.jpg") no-repeat center/cover fixed;  
+      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("https://files.catbox.moe/aw3huu.jpg") no-repeat center/cover fixed;  
       animation: fadeIn 1.5s ease-in;  
     }  
     @keyframes fadeIn {  
@@ -49,63 +49,232 @@
       0%, 100% { transform: translateY(0); }  
       50% { transform: translateY(-8px); }  
     }  
-
-    /* === Kontrol Musik === */
-    .music-control{margin:15px 0;display:flex;justify-content:center;}
-    .music-control button{padding:8px 14px;border:none;border-radius:8px;background:#39ff14;color:#000;font-weight:bold;cursor:pointer;box-shadow:0 0 12px rgba(0,0,0,0.5);transition:0.3s;}
-    .music-control button:hover{transform:scale(1.08);}
+    .section {  
+      display: flex;  
+      flex-direction: column;  
+      gap: 12px;  
+      width: 100%;  
+      max-width: 800px;  
+      margin-bottom: 40px;  
+    }  
+    .product-list {  
+      display: grid;  
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));  
+      gap: 20px;  
+      width: 100%;  
+      max-width: 900px;  
+    }  
+    .product-card {  
+      background: rgba(20,20,20,0.75);  
+      border: 1px solid rgba(255,255,255,0.15);  
+      border-radius: 15px;  
+      padding: 15px;  
+      box-shadow: 0 0 16px rgba(0,0,0,0.5);  
+      cursor: pointer;  
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), background 0.35s ease, box-shadow 0.35s ease;  
+      text-align: center;  
+      position: relative;  
+      overflow: hidden;  
+    }  
+   .product-card::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 16px;
+      background: #39ff14;
+      filter: blur(25px);
+      opacity: 1;
+      z-index: -1;
+      animation: auraPulse 4s ease-in-out infinite;
+    }
+    @keyframes auraPulse {
+      0%, 100% { filter: blur(20px); }
+      50% { filter: blur(35px); }
+    }
+    .product-card:hover {  
+      background: rgba(40,40,40,0.85);  
+      transform: translateY(-6px) scale(1.03);  
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);  
+    }  
+    .product-title {  
+      font-size: 1.1em;  
+      font-weight: bold;  
+      color: #fff;  
+      margin: 8px 0;  
+      text-shadow: 0 0 6px rgba(0,0,0,0.7);  
+    }  
+    .price { font-size: 0.95em; margin: 6px 0; color: #e8e8e8; }  
+    .product-image {  
+      width: 100%;  
+      aspect-ratio: 1/1;  
+      object-fit: cover;  
+      border-radius: 10px;  
+      margin-bottom: 8px;  
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);  
+      transition: transform 0.4s ease, box-shadow 0.4s ease;  
+    }  
+    .product-card:hover .product-image {  
+      transform: scale(1.03);  
+      box-shadow: 0 0 14px rgba(0,0,0,0.6);  
+    }  
+    .hint { font-size: 0.8em; color: #aaa; margin-top: 3px; }  
+    .product-card.active .hint::after { content: " ▲"; }  
+    .product-card:not(.active) .hint::after { content: " ▼"; }  
+    .product-detail {  
+      max-height: 0;  
+      overflow: hidden;  
+      margin-top: 6px;  
+      font-size: 0.85em;  
+      color: #b0b0b0;  
+      white-space: pre-line;  
+      line-height: 1.4;  
+      transition: max-height 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;  
+      opacity: 0;  
+    }  
+    .product-card.active .product-detail {  
+      max-height: 350px;  
+      opacity: 1;  
+    }  
+    hr {  
+      width: 80%;  
+      border: none;  
+      height: 1px;  
+      background-color: rgba(255,255,255,0.2);  
+      margin: 30px 0;  
+    }  
+    .note { color: #ccc; font-size: 0.9em; text-align: center; }  
+    .contact-section {  
+      text-align: center;  
+      margin-top: 40px;  
+      padding: 20px;  
+      background: rgba(20,20,20,0.85);  
+      border-radius: 15px;  
+      box-shadow: 0 0 14px rgba(0,0,0,0.5);  
+    }  
+    .contact-section h2 {  
+      font-size: 1.5rem;  
+      margin-bottom: 15px;  
+      color: #fff;  
+    }  
+    .contact-links {  
+      display: flex;  
+      justify-content: center;  
+      gap: 15px;  
+      margin-top: 15px;  
+      flex-wrap: wrap;  
+    }  
+    .contact-btn {  
+      display: flex;  
+      align-items: center;  
+      gap: 8px;  
+      padding: 10px 18px;  
+      border-radius: 8px;  
+      font-weight: bold;  
+      text-decoration: none;  
+      color: #fff;  
+      transition: 0.3s;  
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);  
+    }  
+    .contact-btn img { width: 20px; height: 20px; object-fit: contain; }  
+    .contact-btn:hover { opacity: 0.85; transform: scale(1.06); }  
+    .telegram { background-color: #0088cc; }  
+    .whatsapp { background-color: #25D366; }  
+    .dana { background-color: #0284fe; }  
+    .seabank { background-color: #f37321; }  
+    .qris { background-color: #d11c1c; }  
+    .toast {  
+      position: fixed;  
+      bottom: 30px;  
+      left: 50%;  
+      transform: translateX(-50%);  
+      background: rgba(0,0,0,0.85);  
+      color: #fff;  
+      padding: 10px 20px;  
+      border-radius: 8px;  
+      font-size: 0.9em;  
+      opacity: 0;  
+      pointer-events: none;  
+      transition: opacity 0.4s ease, transform 0.4s ease;  
+      z-index: 1000;  
+    }  
+    .toast.show {  
+      opacity: 1;  
+      transform: translateX(-50%) translateY(-10px);  
+    }  
+    .music-controls {
+      margin: 15px 0;
+      display: flex;
+      gap: 10px;
+    }
+    .music-btn {
+      background: #39ff14;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #000;
+    }
+    .music-btn:hover { opacity: 0.8; transform: scale(1.05); }
   </style>  
 </head>  
 <body>  
   <h1>Asep Product</h1>  
-  <img src="https://files.catbox.moe/86a9gg.jpg" class="thumbnail" alt="Logo Asep Product"/>  
+  <img src="https://files.catbox.moe/3zscsg.jpg" class="thumbnail" alt="Logo Asep Product"/>  
   <div class="note">𝖠𝗅𝗅 𝖯𝗋𝗈𝖽𝗎𝖼𝗍𝗂𝗈𝗇𝗌 𝖡𝗒 𝖠𝗌𝖾𝗉 𝖭𝗈𝗍 𝖣𝖾𝗏</div>  
   <hr/>  
 
-  <!-- 🎵 Musik -->
-  <audio id="bgm" loop>
+  <!-- Musik autoplay -->
+  <audio id="bg-music" autoplay loop>
     <source src="https://files.catbox.moe/7gjqys.mp3" type="audio/mpeg">
   </audio>
-  <div class="music-control">
-    <button id="musicToggle">▶ Play Music</button>
+  <div class="music-controls">
+    <button class="music-btn" onclick="playMusic()">▶ Play</button>
+    <button class="music-btn" onclick="pauseMusic()">⏸ Pause</button>
   </div>
 
   <!-- Produk Lengkap -->  
-  <div class="product-card" onclick="toggleDetail(this)">
-        <img src="https://files.catbox.moe/xwaynf.jpg" class="product-image" alt="Nika"/>
-        <div class="product-title">𝖭𝗂𝗄𝖺 𝖳𝖾𝗅𝖾𝗀𝗋𝖺𝗆</div>
-        <div class="price">Rp35.000-180.000</div>
-        <div class="hint">Tap untuk lihat detail</div>
-        <div class="product-detail">
-𝖲𝖼𝗋𝗂𝗉𝗍 𝖭𝗂𝗄𝖺: 35.000
-𝖱𝖾𝗌𝖾𝗅𝗅𝖾𝗋: 60.000
-𝖯𝖺𝗍𝗇𝖾𝗋𝗍: 180.000
-        </div>
-      </div>
+  <div class="product-list">
 
-      <div class="product-card" onclick="toggleDetail(this)">  
-        <img src="https://files.catbox.moe/y2grm8.jpeg" class="product-image" alt="Sasuke Crash"/>  
-        <div class="product-title">𝖲𝖺𝗌𝗎𝗄𝖾 𝖳𝖾𝗅𝖾</div>  
-        <div class="price">Rp35.000-180.000</div>  
-        <div class="hint">Tap untuk lihat detail</div>  
-        <div class="product-detail">
-𝖲𝖼𝗋𝗂𝗉𝗍 𝖲𝖺𝗌𝗎𝗄𝖾: 35.000
-𝖱𝖾𝗌𝖾𝗅𝗅𝖾𝗋: 50.000
-𝖯𝖺𝗍𝗇𝖾𝗋𝗍: 120.000
-𝖮𝗐𝗇𝖾𝗋: 180.000
-        </div>
+    <!-- Nika -->
+    <div class="product-card" onclick="toggleDetail(this)">
+      <img src="https://files.catbox.moe/yvnl8m.jpg" class="product-image" alt="Nika"/>
+      <div class="product-title">𝖭𝗂𝗄𝖺 𝖳𝖾𝗅𝖾𝗀𝗋𝖺𝗆</div>
+      <div class="price">Rp35.000-180.000</div>
+      <div class="hint">Tap untuk lihat detail</div>
+      <div class="product-detail">
+𝗦𝗰𝗿𝗶𝗽𝘁 𝗡𝗶𝗸𝗮: 35.000
+𝗥𝗲𝘀𝘀𝗲𝗹𝗹𝗲𝗿: 60.000
+𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 180.000
       </div>
+    </div>
 
-      <div class="product-card" onclick="toggleDetail(this)">  
-        <img src="https://files.catbox.moe/mg739g.jpg" class="product-image" alt="Patnert Biasa"/>  
-        <div class="product-title">Patnert Biasa</div>  
-        <div class="price">Rp100.000</div>  
-        <div class="hint">Tap untuk lihat detail</div>  
-        <div class="product-detail">
+    <!-- Sasuke -->
+    <div class="product-card" onclick="toggleDetail(this)">  
+      <img src="https://files.catbox.moe/hgeqfw.jpg" class="product-image" alt="Sasuke Crash"/>  
+      <div class="product-title">𝖲𝖺𝗌𝗎𝗄𝖾 𝖳𝖾𝗅𝖾</div>  
+      <div class="price">Rp35.000-180.000</div>  
+      <div class="hint">Tap untuk lihat detail</div>  
+      <div class="product-detail">
+𝗦𝗰𝗿𝗶𝗽𝘁 𝗦𝗮𝘀𝘂𝗸𝗲: 35.000
+𝗥𝗲𝘀𝗲𝗹𝗹𝗲𝗿: 50.000
+𝗣𝗮𝗿𝘁𝗻𝗲𝗿: 120.000
+𝗢𝘄𝗻𝗲𝗿 𝗦𝗽𝗲𝘀𝗶𝗮𝗹: 180.000
+      </div>
+    </div>
+
+    <!-- Patnert Biasa -->
+    <div class="product-card" onclick="toggleDetail(this)">  
+      <img src="https://files.catbox.moe/0wcwjb.jpg" class="product-image" alt="Patnert Biasa"/>  
+      <div class="product-title">Patnert Biasa</div>  
+      <div class="price">Rp100.000</div>  
+      <div class="hint">Tap untuk lihat detail</div>  
+      <div class="product-detail">
 Get Reseller Sasuke Via Tele
 Get Patnert Domain Via Wa
 Get Reseller Domain Via Wa
-Get Sc No Enc Domain Full Upadte
+Get Sc No Enc Domain Full Update
 Free Admin Chanel
 Free Base Wa Atau Tele
 Get Function Bug
@@ -113,15 +282,16 @@ Get Mursc
 Get Admin Ubot
 Di Promosiin 24x1
 Dll
-        </div>
       </div>
+    </div>
 
-      <div class="product-card" onclick="toggleDetail(this)">  
-        <img src="https://files.catbox.moe/hgeqfw.jpg" class="product-image" alt="Patnert Pribadi"/>  
-        <div class="product-title">Patnert Pribadi</div>  
-        <div class="price">Rp320.000</div>  
-        <div class="hint">Tap untuk lihat detail</div>  
-        <div class="product-detail">
+    <!-- Patnert Pribadi -->
+    <div class="product-card" onclick="toggleDetail(this)">  
+      <img src="https://files.catbox.moe/hnc52g.jpg" class="product-image" alt="Patnert Pribadi"/>  
+      <div class="product-title">Patnert Pribadi</div>  
+      <div class="price">Rp320.000</div>  
+      <div class="hint">Tap untuk lihat detail</div>  
+      <div class="product-detail">
 Get Owner Sasuke Via Tele
 Get Owner Nika Via Tele
 Get Owner Domain Via Wa
@@ -135,14 +305,15 @@ Get Baned Wangcap
 Get Admin Gb
 Di Promosiin 24x2
 Dll
-        </div>
       </div>
+    </div>
 
-    <!-- Payment & Contact -->
-    <footer class="contact-section">
+  </div>
+
+  <footer class="contact-section">
       <h2>All Payment</h2>
       <div class="contact-links">
-        <a href="https://files.catbox.moe/qwe27o.jpg" target="_blank" class="contact-btn qris">
+        <a href="https://files.catbox.moe/0j5rqj.jpg" target="_blank" class="contact-btn qris">
           <img src="https://img.icons8.com/ios-filled/50/ffffff/qr-code.png"/> QRIS
         </a>
         <a href="javascript:void(0)" onclick="copyToClipboard('083862861689')" class="contact-btn dana">
@@ -167,18 +338,6 @@ Dll
   </div>
 
    <script>
-    const bgm=document.getElementById("bgm");
-    const musicToggle=document.getElementById("musicToggle");
-
-    musicToggle.addEventListener("click",async()=>{
-      if(bgm.paused){
-        try{await bgm.play();musicToggle.textContent="⏸ Stop Music";}
-        catch(e){alert("Browser blokir autoplay. Klik lagi ya.");}
-      }else{
-        bgm.pause();musicToggle.textContent="▶ Play Music";
-      }
-    });
-
     function toggleDetail(card){ card.classList.toggle("active"); }
 
     function copyToClipboard(text){
@@ -203,6 +362,9 @@ Dll
       toast.classList.add("show");
       setTimeout(()=>{toast.classList.remove("show");},2000);
     }
+
+    function playMusic(){ document.getElementById("bg-music").play(); }
+    function pauseMusic(){ document.getElementById("bg-music").pause(); }
   </script>
 </body>
 </html>
